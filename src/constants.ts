@@ -1,0 +1,3 @@
+export const DEFAULT_CONVO_DURATION = 2 * 60;
+
+export const DEFAULT_DAILY_CONVO_LIMIT = 1;
