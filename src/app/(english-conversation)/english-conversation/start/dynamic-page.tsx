@@ -49,7 +49,7 @@ function DynamicStartConversationPage() {
   const limitModal = useLimitModal();
 
   useEffect(() => {
-    load();
+    // load();
     // Check conversation limit
     const dailyConversation = Cookies.get("dailyConversation");
     if (dailyConversation) {
@@ -92,18 +92,18 @@ function DynamicStartConversationPage() {
     }
   }, [conversationActive, isRecording]);
 
-  const load = async () => {
-    const baseURL = "https://unpkg.com/@ffmpeg/core@0.12.6/dist/umd";
-    const ffmpeg = ffmpegRef.current;
-    try {
-      const [coreURL, wasmURL] = await Promise.all([
-        toBlobURL(`${baseURL}/ffmpeg-core.js`, "text/javascript"),
-        toBlobURL(`${baseURL}/ffmpeg-core.wasm`, "application/wasm"),
-      ]);
+  // const load = async () => {
+  //   const baseURL = "https://unpkg.com/@ffmpeg/core@0.12.6/dist/umd";
+  //   const ffmpeg = ffmpegRef.current;
+  //   try {
+  //     const [coreURL, wasmURL] = await Promise.all([
+  //       toBlobURL(`${baseURL}/ffmpeg-core.js`, "text/javascript"),
+  //       toBlobURL(`${baseURL}/ffmpeg-core.wasm`, "application/wasm"),
+  //     ]);
 
-      await ffmpeg.load({ coreURL, wasmURL });
-    } catch (error) {}
-  };
+  //     await ffmpeg.load({ coreURL, wasmURL });
+  //   } catch (error) {}
+  // };
 
   async function startConversation() {
     setIsLoading(true);
