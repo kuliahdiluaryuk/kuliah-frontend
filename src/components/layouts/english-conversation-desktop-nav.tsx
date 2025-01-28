@@ -23,7 +23,9 @@ export const EnglishConversationDesktopNav = ({ user }: { user?: User }) => {
         />
         <div>
           <h1 className="text-lg font-semibold">Kuliah Di Luar Yuk</h1>
-          <p className="text-xs text-muted-foreground">Conversation.AI</p>
+          <p className="text-xs text-muted-foreground">
+            Unlock Your Future Abroad
+          </p>
         </div>
       </Link>
       <ul className="flex items-center justify-center gap-2">
@@ -43,7 +45,7 @@ export const EnglishConversationDesktopNav = ({ user }: { user?: User }) => {
               "font-semibold shadow-none",
               segment === "english-conversation"
                 ? "text-[#292929]"
-                : "text-[#A3A3A3]",
+                : "text-[#A3A3A3]"
             )}
             asChild
           >
@@ -59,7 +61,7 @@ export const EnglishConversationDesktopNav = ({ user }: { user?: User }) => {
               "font-semibold shadow-none",
               segment === "booking-meeting-with-us"
                 ? "text-[#292929]"
-                : "text-[#A3A3A3]",
+                : "text-[#A3A3A3]"
             )}
             asChild
           >
@@ -73,7 +75,7 @@ export const EnglishConversationDesktopNav = ({ user }: { user?: User }) => {
             variant={segment === "pricing" ? "default" : "ghost"}
             className={cn(
               "font-semibold shadow-none",
-              segment === "pricing" ? "text-[#292929]" : "text-[#A3A3A3]",
+              segment === "pricing" ? "text-[#292929]" : "text-[#A3A3A3]"
             )}
             asChild
           >
