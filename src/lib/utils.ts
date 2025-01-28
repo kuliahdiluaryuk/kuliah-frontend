@@ -42,7 +42,7 @@ export const loginGoogle = async ({
         email,
         name,
         avatar,
-      },
+      }
     );
 
     setToken(response.data.token);
@@ -73,7 +73,7 @@ export const getUserLogged = async () => {
         headers: {
           Authorization: `Bearer ${token}`,
         },
-      },
+      }
     );
 
     return response.data.data;
@@ -92,7 +92,7 @@ export const logout = async () => {
         headers: {
           Authorization: `Bearer ${token}`,
         },
-      },
+      }
     );
 
     deleteToken();
@@ -128,7 +128,7 @@ export const storeConversation = async (data: StoreConversationProps) => {
         headers: {
           Authorization: `Bearer ${token}`,
         },
-      },
+      }
     );
 
     return response.data.data;
@@ -146,7 +146,7 @@ export const getAllConversation = async (): Promise<Conversation[]> => {
         headers: {
           Authorization: `Bearer ${token}`,
         },
-      },
+      }
     );
 
     return response.data.data;
@@ -157,7 +157,7 @@ export const getAllConversation = async (): Promise<Conversation[]> => {
 };
 
 export const getDetailConversation = async (
-  id: string | string[],
+  id: string | string[]
 ): Promise<Conversation> => {
   try {
     const token = getToken();
@@ -167,7 +167,7 @@ export const getDetailConversation = async (
         headers: {
           Authorization: `Bearer ${token}`,
         },
-      },
+      }
     );
 
     return response.data.data;
@@ -185,10 +185,16 @@ export const parseMajorRecommendation = (text: string) => {
   const majors = [];
 
   // Iterate through the lines that contain major recommendations
-  for (let i = 2; i < lines.length - 1; i++) {
-    const majorParts = lines[i].split(": "); // Split major name from description
-    const majorName = majorParts[0].replace(/^\d+\.\s*/, "").trim(); // Remove number and trim whitespace
-    const majorDescription = majorParts[1].trim(); // Description is the second part after the colon
+  for (let i = 1; i < lines.length - 1; i++) {
+    const majorParts = lines[i].split(" - "); // Split the major name from the description
+
+    const majorName = majorParts[0]
+      .replace(/^\d+\.\s*\*\*/, "") // Remove number and starting markdown symbols
+      .replace(/\*\*$/, "") // Remove trailing markdown symbols
+      .trim(); // Trim whitespace
+
+    const majorDescription = majorParts[1]?.trim() || ""; // Handle cases where there's no description
+
     majors.push({
       name: majorName,
       description: majorDescription,
@@ -231,7 +237,7 @@ export const storeMajor = async (major: Major, refCode: string | null) => {
         headers: {
           Authorization: `Bearer ${token}`,
         },
-      },
+      }
     );
   } catch (error) {
     console.log(error);
