@@ -2,17 +2,18 @@ import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
 
 import { Message } from "@/types";
+import { ChatMessageType } from "@/transcriptions/TranscriptionTile";
 
 interface MessageState {
-  messages: Message[];
-  setMessages: (data: Message[]) => void;
+  messages: ChatMessageType[];
+  setMessages: (data: ChatMessageType[]) => void;
 }
 
 const useMessage = create<MessageState>()(
   persist(
     (set) => ({
       messages: [],
-      setMessages: (data: Message[]) => {
+      setMessages: (data: ChatMessageType[]) => {
         set({ messages: data });
       },
     }),

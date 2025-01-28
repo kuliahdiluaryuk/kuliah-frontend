@@ -1,31 +1,19 @@
 "use client";
 
-import { ArrowUpRight, Copy, Pencil } from "lucide-react";
+import { ArrowUpRight, Pencil } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useState } from "react";
 
 import { Icons } from "@/components/icons";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Input } from "@/components/ui/input";
-import { Progress } from "@/components/ui/progress";
 import { Separator } from "@/components/ui/separator";
-import { formatPrice, getUserLogged } from "@/lib/utils";
-import { User } from "@/types";
+import useSession from "@/hooks/use-session";
+import { formatPrice } from "@/lib/utils";
 
 function ProfilePage() {
-  const [user, setUser] = useState<User | null>(null);
-
-  useEffect(() => {
-    const getUser = async () => {
-      const res = await getUserLogged();
-      setUser(res);
-    };
-
-    getUser();
-  }, []);
+  const { user } = useSession();
 
   if (!user) {
     return <p>Loading...</p>;
@@ -105,7 +93,7 @@ function ProfilePage() {
               </p>
             </div>
             <div>
-              <p className="text-neutral-600 font-medium">Language</p>
+              <p className="text-neutral-600 font-medium">Country</p>
               <p className="text-neutral-900 font-medium text-lg">
                 {user.country}
               </p>
@@ -152,7 +140,7 @@ function ProfilePage() {
               <p className="text-2xl md:text-5xl font-semibold text-neutral-900">
                 {formatPrice(user.plan ? user.plan?.plan_price : 0).replace(
                   ",00",
-                  ""
+                  "",
                 )}
               </p>
               <span className="text-xs sm:text-base text-neutral-600 font-medium">

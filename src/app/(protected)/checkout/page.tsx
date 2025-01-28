@@ -1,26 +1,15 @@
 "use client";
 
 import { LoaderCircle } from "lucide-react";
-import { useEffect, useState } from "react";
 
 import { CheckoutForm } from "@/components/forms/checkout-form";
 import { OrderSummary } from "@/components/forms/order-summary";
 import { MainNav } from "@/components/layouts/main-nav";
 import { Separator } from "@/components/ui/separator";
-import { getUserLogged } from "@/lib/utils";
-import { User } from "@/types";
+import useSession from "@/hooks/use-session";
 
 function CheckoutPage() {
-  const [user, setUser] = useState<User | null>(null);
-
-  useEffect(() => {
-    const getUser = async () => {
-      const res = await getUserLogged();
-      setUser(res);
-    };
-
-    getUser();
-  }, []);
+  const { user } = useSession();
 
   return (
     <>

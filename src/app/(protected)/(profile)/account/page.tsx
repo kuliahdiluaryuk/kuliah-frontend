@@ -2,21 +2,10 @@
 
 import { AccountProfileForm } from "@/components/forms/account-profile-form";
 import { Separator } from "@/components/ui/separator";
-import { getUserLogged } from "@/lib/utils";
-import { User } from "@/types";
-import { useEffect, useState } from "react";
+import useSession from "@/hooks/use-session";
 
 function AccountPage() {
-  const [user, setUser] = useState<User | null>(null);
-
-  useEffect(() => {
-    const getUser = async () => {
-      const res = await getUserLogged();
-      setUser(res);
-    };
-
-    getUser();
-  }, []);
+  const { user } = useSession();
 
   return (
     <div>

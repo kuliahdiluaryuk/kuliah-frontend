@@ -1,9 +1,20 @@
 "use client";
 
-import { LogOut, Menu, MessageSquare, Mic, PanelLeft, Trash2 } from "lucide-react";
+import {
+  LogOut,
+  Menu,
+  MessageSquare,
+  Mic,
+  PanelLeft,
+  Trash2,
+} from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { useParams, useRouter, useSelectedLayoutSegment } from "next/navigation";
+import {
+  useParams,
+  useRouter,
+  useSelectedLayoutSegment,
+} from "next/navigation";
 import { useEffect, useState } from "react";
 import { PiArrowSquareOut, PiClockClockwise } from "react-icons/pi";
 
@@ -17,15 +28,14 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import useSession from "@/hooks/use-session";
 import { cn, getAllConversation, logout } from "@/lib/utils";
+import { User } from "@/types";
 import { LuUsers } from "react-icons/lu";
 import { TbUserSquare } from "react-icons/tb";
 
-export const EnglishConversationMobileNav = () => {
+export const EnglishConversationMobileNav = ({ user }: { user?: User }) => {
   const [results, setResults] = useState<any[]>([]);
 
-  const { user } = useSession();
   const params = useParams();
   const router = useRouter();
 
@@ -86,7 +96,7 @@ export const EnglishConversationMobileNav = () => {
                                     <Button
                                       onClick={() =>
                                         router.replace(
-                                          `/english-conversation/c/${result.id}`,
+                                          `/english-conversation/c/${result.id}`
                                         )
                                       }
                                       variant="ghost"
@@ -94,7 +104,7 @@ export const EnglishConversationMobileNav = () => {
                                         "justify-start w-full",
                                         params.conversationId == result.id
                                           ? "text-[#171717]"
-                                          : "text-[#737373]",
+                                          : "text-[#737373]"
                                       )}
                                     >
                                       <>
@@ -177,35 +187,19 @@ export const EnglishConversationMobileNav = () => {
               <SheetClose asChild>
                 <Button
                   variant={
-                    segment === "discover-your-major" ? "default" : "ghost"
-                  }
-                  className={cn(
-                    "justify-start font-semibold shadow-none w-full",
-                    segment === "discover-your-major"
-                      ? "text-[#292929]"
-                      : "text-[#A3A3A3]",
-                  )}
-                  asChild
-                >
-                  <Link href="/discover-your-major">Discovery your major</Link>
-                </Button>
-              </SheetClose>
-            </li>
-            <li className="w-full">
-              <SheetClose asChild>
-                <Button
-                  variant={
                     segment === "english-conversation" ? "default" : "ghost"
                   }
                   className={cn(
                     "justify-start font-semibold shadow-none w-full",
                     segment === "english-conversation"
                       ? "text-[#292929]"
-                      : "text-[#A3A3A3]",
+                      : "text-[#A3A3A3]"
                   )}
                   asChild
                 >
-                  <Link href="/english-conversation">English Conversation</Link>
+                  <Link href="/english-conversation">
+                    Interactive Conversation
+                  </Link>
                 </Button>
               </SheetClose>
             </li>
@@ -219,12 +213,32 @@ export const EnglishConversationMobileNav = () => {
                     "justify-start font-semibold shadow-none w-full",
                     segment === "booking-meeting-with-us"
                       ? "text-[#292929]"
-                      : "text-[#A3A3A3]",
+                      : "text-[#A3A3A3]"
                   )}
                   asChild
                 >
                   <Link href="/booking-meeting-with-us">
-                    Booking Meeting with us
+                    Discuss Your English Preparation with Us
+                  </Link>
+                </Button>
+              </SheetClose>
+            </li>
+            <li className="w-full">
+              <SheetClose asChild>
+                <Button
+                  variant={
+                    segment === "pricing" ? "default" : "ghost"
+                  }
+                  className={cn(
+                    "justify-start font-semibold shadow-none w-full",
+                    segment === "pricing"
+                      ? "text-[#292929]"
+                      : "text-[#A3A3A3]"
+                  )}
+                  asChild
+                >
+                  <Link href="/pricing">
+                    Subscription
                   </Link>
                 </Button>
               </SheetClose>
@@ -243,7 +257,7 @@ export const EnglishConversationMobileNav = () => {
                       "justify-start font-semibold shadow-none w-full",
                       segment === "profile"
                         ? "text-[#292929]"
-                        : "text-[#A3A3A3]",
+                        : "text-[#A3A3A3]"
                     )}
                   >
                     <Link href="/profile">
@@ -265,7 +279,7 @@ export const EnglishConversationMobileNav = () => {
                       "justify-start font-semibold shadow-none w-full",
                       segment === "subscriptions"
                         ? "text-[#292929]"
-                        : "text-[#A3A3A3]",
+                        : "text-[#A3A3A3]"
                     )}
                   >
                     <Link href="/subscriptions">
@@ -274,25 +288,6 @@ export const EnglishConversationMobileNav = () => {
                         aria-hidden="true"
                       />
                       Subscriptions
-                    </Link>
-                  </Button>
-                </SheetClose>
-              </li>
-              <li className="w-full">
-                <SheetClose asChild>
-                  <Button
-                    asChild
-                    variant={segment === "referral" ? "default" : "ghost"}
-                    className={cn(
-                      "justify-start font-semibold shadow-none w-full",
-                      segment === "referral"
-                        ? "text-[#292929]"
-                        : "text-[#A3A3A3]",
-                    )}
-                  >
-                    <Link href="/referral">
-                      <LuUsers className="mr-2 h-6 w-6" aria-hidden="true" />
-                      Referral Program
                     </Link>
                   </Button>
                 </SheetClose>

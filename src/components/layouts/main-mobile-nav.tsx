@@ -4,7 +4,6 @@ import { LogOut, Menu } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useSelectedLayoutSegment } from "next/navigation";
-import { useEffect } from "react";
 import { LuUsers } from "react-icons/lu";
 import { PiClockClockwise } from "react-icons/pi";
 import { TbUserSquare } from "react-icons/tb";
@@ -18,21 +17,11 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import useSession from "@/hooks/use-session";
-import { cn, getUserLogged, logout } from "@/lib/utils";
+import { cn, logout } from "@/lib/utils";
+import { User } from "@/types";
 
-export const MainMobileNav = () => {
-  const { user, setUser } = useSession();
-
+export const MainMobileNav = ({ user }: { user?: User }) => {
   const segment = useSelectedLayoutSegment();
-
-  useEffect(() => {
-    const getUser = async () => {
-      const res = await getUserLogged();
-      setUser(res);
-    };
-    getUser();
-  }, []);
 
   return (
     <div className="flex xl:hidden items-center justify-between">
@@ -70,17 +59,19 @@ export const MainMobileNav = () => {
               <SheetClose asChild>
                 <Button
                   variant={
-                    segment === "discover-your-major" ? "default" : "ghost"
+                    segment === "english-conversation" ? "default" : "ghost"
                   }
                   className={cn(
                     "justify-start font-semibold shadow-none w-full",
-                    segment === "discover-your-major"
+                    segment === "english-conversation"
                       ? "text-[#292929]"
-                      : "text-[#A3A3A3]",
+                      : "text-[#A3A3A3]"
                   )}
                   asChild
                 >
-                  <Link href="/discover-your-major">Discovery your major</Link>
+                  <Link href="/english-conversation">
+                  Prepare Your English
+                  </Link>
                 </Button>
               </SheetClose>
             </li>
@@ -88,17 +79,17 @@ export const MainMobileNav = () => {
               <SheetClose asChild>
                 <Button
                   variant={
-                    segment === "english-conversation" ? "default" : "ghost"
+                    segment === "discover-your-major" ? "default" : "ghost"
                   }
                   className={cn(
                     "justify-start font-semibold shadow-none w-full",
-                    segment === "english-conversation"
+                    segment === "discover-your-major"
                       ? "text-[#292929]"
-                      : "text-[#A3A3A3]",
+                      : "text-[#A3A3A3]"
                   )}
                   asChild
                 >
-                  <Link href="/english-conversation">English Conversation</Link>
+                  <Link href="/discover-your-major">Discover Your Major</Link>
                 </Button>
               </SheetClose>
             </li>
@@ -112,12 +103,12 @@ export const MainMobileNav = () => {
                     "justify-start font-semibold shadow-none w-full",
                     segment === "booking-meeting-with-us"
                       ? "text-[#292929]"
-                      : "text-[#A3A3A3]",
+                      : "text-[#A3A3A3]"
                   )}
                   asChild
                 >
                   <Link href="/booking-meeting-with-us">
-                    Booking Meeting with us
+                    Discuss Your Study Plan with us
                   </Link>
                 </Button>
               </SheetClose>
@@ -136,7 +127,7 @@ export const MainMobileNav = () => {
                       "justify-start font-semibold shadow-none w-full",
                       segment === "profile"
                         ? "text-[#292929]"
-                        : "text-[#A3A3A3]",
+                        : "text-[#A3A3A3]"
                     )}
                   >
                     <Link href="/profile">
@@ -158,7 +149,7 @@ export const MainMobileNav = () => {
                       "justify-start font-semibold shadow-none w-full",
                       segment === "subscriptions"
                         ? "text-[#292929]"
-                        : "text-[#A3A3A3]",
+                        : "text-[#A3A3A3]"
                     )}
                   >
                     <Link href="/subscriptions">
@@ -167,25 +158,6 @@ export const MainMobileNav = () => {
                         aria-hidden="true"
                       />
                       Subscriptions
-                    </Link>
-                  </Button>
-                </SheetClose>
-              </li>
-              <li className="w-full">
-                <SheetClose asChild>
-                  <Button
-                    asChild
-                    variant={segment === "referral" ? "default" : "ghost"}
-                    className={cn(
-                      "justify-start font-semibold shadow-none w-full",
-                      segment === "referral"
-                        ? "text-[#292929]"
-                        : "text-[#A3A3A3]",
-                    )}
-                  >
-                    <Link href="/referral">
-                      <LuUsers className="mr-2 h-6 w-6" aria-hidden="true" />
-                      Referral Program
                     </Link>
                   </Button>
                 </SheetClose>

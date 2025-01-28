@@ -3,8 +3,6 @@
 import { LogOut } from "lucide-react";
 import Link from "next/link";
 import { useSelectedLayoutSegment } from "next/navigation";
-import { useEffect } from "react";
-import { LuUsers } from "react-icons/lu";
 import { PiClockClockwise } from "react-icons/pi";
 import { TbUserSquare } from "react-icons/tb";
 
@@ -19,22 +17,11 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import useSession from "@/hooks/use-session";
-import { cn, getUserLogged, logout } from "@/lib/utils";
+import { cn, logout } from "@/lib/utils";
+import { User } from "@/types";
 
-const UserAccountNav = () => {
-  const { user, setUser } = useSession();
-
+const UserAccountNav = ({ user }: { user?: User }) => {
   const segment = useSelectedLayoutSegment();
-
-  useEffect(() => {
-    const getUser = async () => {
-      const res = await getUserLogged();
-      setUser(res);
-    };
-    getUser();
-  }, []);
-
 
   if (!user) {
     return (
@@ -99,23 +86,6 @@ const UserAccountNav = () => {
               </Link>
             </Button>
           </DropdownMenuItem>
-          {/* <DropdownMenuItem asChild>
-            <Button
-              asChild
-              variant={segment === "referral" ? "default" : "ghost"}
-              className={cn(
-                "justify-start cursor-pointer py-6 px-4 outline-none",
-                segment === "referral"
-                  ? "focus:bg-[#FFD013]/90 font-semibold"
-                  : "text-[#737373]",
-              )}
-            >
-              <Link href="/referral">
-                <LuUsers className="mr-2 h-6 w-6" aria-hidden="true" />
-                Referral Program
-              </Link>
-            </Button>
-          </DropdownMenuItem> */}
         </DropdownMenuGroup>
 
         <DropdownMenuSeparator className="mx-2 mb-4" />

@@ -6,6 +6,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { ModalProvider } from "@/providers/modal-provider";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 
+import "@livekit/components-styles"
 import "./globals.css";
 
 const lazydog = localFont({

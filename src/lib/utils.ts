@@ -1,9 +1,11 @@
 import axios from "axios";
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
+import { jwtDecode } from "jwt-decode";
 
 import { deleteToken, getToken, setToken } from "@/lib/cookies";
 import { Conversation, Major, Message } from "@/types";
+import { ChatMessageType } from "@/transcriptions/TranscriptionTile";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -52,6 +54,19 @@ export const loginGoogle = async ({
 export const getUserLogged = async () => {
   try {
     const token = getToken();
+
+    if (!token) {
+      return null;
+    }
+
+    const decoded = jwtDecode(token);
+    const currentDate = new Date();
+
+    // Check is token expired
+    if (decoded.exp! * 1000 < currentDate.getTime()) {
+      return null;
+    }
+
     const response = await axios.get(
       `${process.env.NEXT_PUBLIC_BACKEND_API}/api/auth/me`,
       {
@@ -88,7 +103,7 @@ export const logout = async () => {
 };
 
 interface StoreConversationProps {
-  messages: Message[];
+  messages: ChatMessageType[];
   level: string;
   topic: string;
   duration: number;

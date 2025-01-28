@@ -1,6 +1,6 @@
 "use client";
 
-import { getUserLogged } from "@/lib/utils";
+import useSession from "@/hooks/use-session";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 
@@ -9,17 +9,14 @@ export default function MainLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const { user } = useSession();
+
   const router = useRouter();
 
   useEffect(() => {
-    const getUser = async () => {
-      const user = await getUserLogged();
-      if (!user) {
-        router.push("/english-conversation");
-      }
-    };
-
-    getUser();
+    if (!user) {
+      router.push("/english-conversation");
+    }
   }, []);
 
   return <>{children}</>;

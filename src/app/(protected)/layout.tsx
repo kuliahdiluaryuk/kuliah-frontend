@@ -1,5 +1,6 @@
-'use client'
+"use client";
 
+import useSession from "@/hooks/use-session";
 import { getUserLogged } from "@/lib/utils";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
@@ -9,6 +10,8 @@ export default function MainLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const { setUser } = useSession();
+
   const router = useRouter();
 
   useEffect(() => {
@@ -16,6 +19,8 @@ export default function MainLayout({
       const user = await getUserLogged();
       if (!user) {
         router.push("/sign-in");
+      } else {
+        setUser(user);
       }
     };
 

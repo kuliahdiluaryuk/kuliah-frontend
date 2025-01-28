@@ -3,12 +3,12 @@ import { create } from "zustand";
 import { User } from "@/types";
 
 interface Session {
-  user: User | null;
+  user: User | undefined;
   setUser: (data: User) => void;
 }
 
 const useSession = create<Session>()((set) => ({
-  user: null,
+  user: undefined,
   setUser: (data: User) => {
     set({ user: data });
   },
