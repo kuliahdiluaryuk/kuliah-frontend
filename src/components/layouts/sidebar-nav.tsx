@@ -27,29 +27,6 @@ export function SidebarNav() {
     getAll();
   }, []);
 
-  const getTopicLabel = (topic: string) => {
-    switch (topic) {
-      case "introduction":
-        return "Greetings and Introductions";
-      case "bargaining":
-        return "Bargaining";
-      case "travel":
-        return "Travel and Holidays";
-      case "food":
-        return "Food and Dining";
-      case "education":
-        return "Education and Learning";
-      case "technology":
-        return "Technology and Gadgets";
-      case "work":
-        return "Work and Career";
-      case "personal":
-        return "Personal Development";
-      default:
-        return "Unknown Topic";
-    }
-  };
-
   return (
     <aside className="hidden sticky top-[10vh] h-[90vh] xl:flex md:flex-col space-y-5 border-r border-gray-200 py-[20px] w-[320px] bg-white">
       <nav className="h-full flex flex-col justify-between">
@@ -68,7 +45,7 @@ export function SidebarNav() {
           <ScrollArea
             className={cn(
               "px-[16px] mt-[28px]",
-              close ? "h-[40vh]" : "h-[60vh]",
+              close ? "h-[40vh]" : "h-[60vh]"
             )}
           >
             <div className="space-y-[28px]">
@@ -76,7 +53,7 @@ export function SidebarNav() {
                 {results.length > 0 ? (
                   <>
                     <p className="text-[#404040] font-semibold text-sm">
-                      Today 
+                      Today
                     </p>
                     <ul className="mt-[14px] space-y-[4px]">
                       {results.map((result, index) => (
@@ -84,7 +61,7 @@ export function SidebarNav() {
                           <Button
                             onClick={() =>
                               router.replace(
-                                `/english-conversation/c/${result.id}`,
+                                `/english-conversation/c/${result.id}`
                               )
                             }
                             variant="ghost"
@@ -92,16 +69,14 @@ export function SidebarNav() {
                               "justify-start w-full",
                               params.conversationId == result.id
                                 ? "text-[#171717]"
-                                : "text-[#737373]",
+                                : "text-[#737373]"
                             )}
                           >
                             <>
                               <span>
                                 <MessageSquare className="w-4 h-4 mr-2" />
                               </span>
-                              <span className="truncate">
-                              {getTopicLabel(result.topic)}
-                              </span>
+                              <span className="truncate">{result.topic}</span>
                             </>
                           </Button>
                         </li>
