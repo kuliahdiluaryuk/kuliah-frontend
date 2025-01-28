@@ -1,10 +1,7 @@
 "use client";
 
-import CalendlyEmbed from "@/components/CalendlyEmbed";
-import { BookingMeetingWithUsForm } from "@/components/forms/booking-meeting-with-us-form";
 import { Footer } from "@/components/layouts/footer";
 import { InlineWidget } from "react-calendly";
-import Image from "next/image";
 
 function BookingMeetingWithUsPage() {
   return (
