@@ -133,6 +133,7 @@ export const CheckoutForm: React.FC<CheckoutFormProps> = ({ user }) => {
                 />
               </FormControl>
               <FormMessage />
+              <p className="text-sm text-gray-500">Phone number must start with +62</p>
             </FormItem>
           )}
         />
