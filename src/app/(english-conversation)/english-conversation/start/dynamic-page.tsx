@@ -24,6 +24,7 @@ import useMessage from "@/hooks/use-message";
 import useSession from "@/hooks/use-session";
 import { storeConversation } from "@/lib/utils";
 import { Message } from "@/types";
+import { ChatMessageType } from "@/transcriptions/TranscriptionTile";
 
 function DynamicStartConversationPage() {
   const [messages, setMessages] = useState<Message[]>([]);
@@ -49,7 +50,6 @@ function DynamicStartConversationPage() {
   const limitModal = useLimitModal();
 
   useEffect(() => {
-    // load();
     // Check conversation limit
     const dailyConversation = Cookies.get("dailyConversation");
     if (dailyConversation) {
@@ -92,18 +92,14 @@ function DynamicStartConversationPage() {
     }
   }, [conversationActive, isRecording]);
 
-  // const load = async () => {
-  //   const baseURL = "https://unpkg.com/@ffmpeg/core@0.12.6/dist/umd";
-  //   const ffmpeg = ffmpegRef.current;
-  //   try {
-  //     const [coreURL, wasmURL] = await Promise.all([
-  //       toBlobURL(`${baseURL}/ffmpeg-core.js`, "text/javascript"),
-  //       toBlobURL(`${baseURL}/ffmpeg-core.wasm`, "application/wasm"),
-  //     ]);
-
-  //     await ffmpeg.load({ coreURL, wasmURL });
-  //   } catch (error) {}
-  // };
+  function logToScreen(message: string | null) {
+    const logElement = document.createElement("div");
+    logElement.style.background = "#eee";
+    logElement.style.padding = "10px";
+    logElement.style.border = "1px solid #ccc";
+    logElement.textContent = message;
+    document.body.appendChild(logElement);
+  }
 
   async function startConversation() {
     setIsLoading(true);
@@ -179,6 +175,15 @@ function DynamicStartConversationPage() {
     await mediaRecorder.current.stopRecording();
     let audioBlob = await mediaRecorder.current.getBlob();
 
+    logToScreen("Original MIME type: " + audioBlob.type);
+
+    // Convert to WebM if not already WebM
+    // if (audioBlob.type !== "audio/webm") {
+    //   audioBlob = await convertToWebM(audioBlob);
+    // }
+
+    logToScreen("Final MIME type: " + audioBlob.type);
+
     const reader = new FileReader();
     reader.readAsDataURL(audioBlob);
     reader.onloadend = async () => {
@@ -229,6 +234,44 @@ function DynamicStartConversationPage() {
     };
   }
 
+  async function convertToWebM(audioBlob: Blob): Promise<Blob> {
+    return new Promise((resolve, reject) => {
+      const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
+      const fileReader = new FileReader();
+
+      fileReader.onload = async (event: ProgressEvent<FileReader>) => {
+        try {
+          const arrayBuffer = event.target?.result as ArrayBuffer;
+          const audioBuffer = await audioContext.decodeAudioData(arrayBuffer);
+          
+          const mediaStreamDestination = audioContext.createMediaStreamDestination();
+          const sourceNode = audioContext.createBufferSource();
+          sourceNode.buffer = audioBuffer;
+          sourceNode.connect(mediaStreamDestination);
+          
+          const options = { mimeType: 'audio/webm;codecs=opus' };
+          const mediaRecorder = new MediaRecorder(mediaStreamDestination.stream, options);
+          const chunks: BlobPart[] = [];
+
+          mediaRecorder.ondataavailable = (e: BlobEvent) => chunks.push(e.data);
+          mediaRecorder.onstop = () => {
+            const webmBlob = new Blob(chunks, { type: 'audio/webm' });
+            resolve(webmBlob);
+          };
+
+          mediaRecorder.start();
+          sourceNode.start(0);
+          sourceNode.onended = () => mediaRecorder.stop();
+        } catch (error) {
+          reject(error);
+        }
+      };
+
+      fileReader.onerror = reject;
+      fileReader.readAsArrayBuffer(audioBlob);
+    });
+  }
+
   async function playResponseAudio() {
     try {
       const response = await fetch(
@@ -252,13 +295,10 @@ function DynamicStartConversationPage() {
 
       if (audioBase64) {
         const ffmpeg = ffmpegRef.current;
-        await ffmpeg.load();
-        await ffmpeg.writeFile("input.webm", await fetchFile(audioBlob));
-        await ffmpeg.exec(["-i", "input.webm", "output.wav"]);
-        const audioBuffer = (await ffmpeg.readFile("output.wav")) as any;
-        audioUrl = URL.createObjectURL(
-          new Blob([audioBuffer.buffer], { type: "audio/wav" })
-        );
+        await ffmpeg.writeFile('input.webm', await fetchFile(audioBlob))
+        await ffmpeg.exec(['-i', 'input.webm', 'output.wav']);
+        const audioBuffer = (await ffmpeg.readFile('output.wav')) as any
+        audioUrl = URL.createObjectURL(new Blob([audioBuffer.buffer], { type: 'audio/wav' }))
       }
 
       const responseAudio = document.getElementById(
@@ -274,6 +314,7 @@ function DynamicStartConversationPage() {
           listenForSpeech();
         }
       });
+
     } catch (error) {
       // alert("Error processing audio response");
     }
@@ -325,7 +366,7 @@ function DynamicStartConversationPage() {
         }
       );
       const data = await response.json();
-      const updatedMessages: Message[] = data.updated_messages;
+      const updatedMessages: ChatMessageType[] = data.updated_messages;
 
       // Get cookie
       const dailyConversation = Cookies.get("dailyConversation");
