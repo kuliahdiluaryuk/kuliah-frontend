@@ -5,7 +5,7 @@ import axios, { AxiosError } from "axios";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
@@ -31,6 +31,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import {
   Select,
   SelectContent,
+  SelectGroup,
   SelectItem,
   SelectTrigger,
   SelectValue,
@@ -40,9 +41,27 @@ import { signupPayload, signupSchema } from "@/lib/validators/sign-up";
 
 export function SignUpForm() {
   const [isLoading, setIsLoading] = useState<boolean>(false);
-
+  const [countries, setCountries] = useState([]);
   const router = useRouter();
   const { toast } = useToast();
+
+  useEffect(() => {
+    const fetchCountries = async () => {
+      try {
+        const response = await axios.get(
+          "https://countriesnow.space/api/v0.1/countries/flag/images"
+        );
+        const sortedCountries = response.data.data.sort((a: any, b: any) =>
+          a.name.localeCompare(b.name)
+        );
+        setCountries(sortedCountries);
+      } catch (error) {
+        console.error("Failed to fetch countries:", error);
+      }
+    };
+
+    fetchCountries();
+  }, []);
 
   const form = useForm<signupPayload>({
     resolver: zodResolver(signupSchema),
@@ -287,152 +306,35 @@ export function SignUpForm() {
               <FormLabel>
                 What country <span className="text-red-600">*</span>
               </FormLabel>
-              <Select onValueChange={field.onChange} defaultValue={field.value}>
-                <FormControl>
-                  <SelectTrigger className="rounded-full">
+              <FormControl>
+                <Select onValueChange={field.onChange}>
+                  <SelectTrigger className="bg-white">
                     <SelectValue placeholder="Select your country" />
                   </SelectTrigger>
-                </FormControl>
-                <SelectContent>
-                  <SelectItem value="Afghanistan">
-                    <div className="flex items-center gap-2">
-                      <Image
-                        src="/images/flags/Afghanistan.png"
-                        alt="Afghanistan"
-                        width={24}
-                        height={18}
-                      />{" "}
-                      Afghanistan
-                    </div>
-                  </SelectItem>
-                  <SelectItem value="Armenia">
-                    <div className="flex items-center gap-2">
-                      <Image
-                        src="/images/flags/Armenia.png"
-                        alt="Armenia"
-                        width={24}
-                        height={18}
-                      />{" "}
-                      Armenia
-                    </div>
-                  </SelectItem>
-                  <SelectItem value="Azerbaijan">
-                    <div className="flex items-center gap-2">
-                      <Image
-                        src="/images/flags/Azerbaijan.png"
-                        alt="Azerbaijan"
-                        width={24}
-                        height={18}
-                      />{" "}
-                      Azerbaijan
-                    </div>
-                  </SelectItem>
-                  <SelectItem value="Brunei">
-                    <div className="flex items-center gap-2">
-                      <Image
-                        src="/images/flags/Brunei.png"
-                        alt="Brunei"
-                        width={24}
-                        height={18}
-                      />{" "}
-                      Brunei
-                    </div>
-                  </SelectItem>
-                  <SelectItem value="Cambodia">
-                    <div className="flex items-center gap-2">
-                      <Image
-                        src="/images/flags/Cambodia.png"
-                        alt="Cambodia"
-                        width={24}
-                        height={18}
-                      />{" "}
-                      Cambodia
-                    </div>
-                  </SelectItem>
-                  <SelectItem value="China">
-                    <div className="flex items-center gap-2">
-                      <Image
-                        src="/images/flags/China.png"
-                        alt="China"
-                        width={24}
-                        height={18}
-                      />{" "}
-                      China
-                    </div>
-                  </SelectItem>
-                  <SelectItem value="Germany">
-                    <div className="flex items-center gap-2">
-                      <Image
-                        src="/images/flags/Germany.png"
-                        alt="Germany"
-                        width={24}
-                        height={18}
-                      />{" "}
-                      Germany
-                    </div>
-                  </SelectItem>
-                  <SelectItem value="India">
-                    <div className="flex items-center gap-2">
-                      <Image
-                        src="/images/flags/India.png"
-                        alt="India"
-                        width={24}
-                        height={18}
-                      />{" "}
-                      India
-                    </div>
-                  </SelectItem>
-                  <SelectItem value="Indonesia">
-                    <div className="flex items-center gap-2">
-                      <Image
-                        src="/images/flags/Indonesia.png"
-                        alt="Indonesia"
-                        width={24}
-                        height={18}
-                      />{" "}
-                      Indonesia
-                    </div>
-                  </SelectItem>
-                  <SelectItem value="Japan">
-                    <div className="flex items-center gap-2">
-                      <Image
-                        src="/images/flags/Japan.png"
-                        alt="Japan"
-                        width={24}
-                        height={18}
-                      />{" "}
-                      Japan
-                    </div>
-                  </SelectItem>
-                  <SelectItem value="United Kingdom">
-                    <div className="flex items-center gap-2">
-                      <Image
-                        src="/images/flags/United Kingdom.png"
-                        alt="United Kingdom"
-                        width={24}
-                        height={18}
-                      />{" "}
-                      United Kingdom
-                    </div>
-                  </SelectItem>
-                </SelectContent>
-              </Select>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="referral"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Referral Code</FormLabel>
-              <FormControl>
-                <Input
-                  placeholder="(Optional)"
-                  disabled={isLoading}
-                  {...field}
-                />
+                  <SelectContent>
+                    <SelectGroup>
+                      {countries.length > 0 ? (
+                        countries.map((country: any) => (
+                          <SelectItem key={country.iso2} value={country.name}>
+                            <div className="flex items-center gap-2">
+                              <Image
+                                src={country.flag}
+                                alt={`Flag of ${country.name}`}
+                                width={24}
+                                height={18}
+                              />
+                              {country.name}
+                            </div>
+                          </SelectItem>
+                        ))
+                      ) : (
+                        <p className="p-2 text-gray-500">
+                          No countries available
+                        </p>
+                      )}
+                    </SelectGroup>
+                  </SelectContent>
+                </Select>
               </FormControl>
               <FormMessage />
             </FormItem>
