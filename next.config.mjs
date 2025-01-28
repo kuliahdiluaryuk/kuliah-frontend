@@ -17,6 +17,12 @@ const nextConfig = {
         port: "",
         pathname: "**",
       },
+      {
+        protocol: "https",
+        hostname: "upload.wikimedia.org", // Add this entry
+        port: "",
+        pathname: "**", // Matches all paths under this domain
+      },
     ],
   },
 };
