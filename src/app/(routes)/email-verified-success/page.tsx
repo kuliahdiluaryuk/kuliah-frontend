@@ -52,7 +52,7 @@ function VerifiedEmailSuccessPage() {
               className="w-full bg-[#FFD02E] py-2 px-4 text-center rounded-lg"
               href={"/"}
             >
-              LLogin
+              Login
             </Link>
           </CardFooter>
         </Card>
