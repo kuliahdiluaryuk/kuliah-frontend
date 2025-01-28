@@ -23,7 +23,7 @@ export const MainDesktopNav = ({ user }: { user?: User }) => {
         />
         <div>
           <h1 className="text-lg font-semibold">Kuliah Di Luar Yuk</h1>
-          <p className="text-xs text-muted-foreground">Conversation AI</p>
+          <p className="text-xs text-muted-foreground">Unlock Your Future Abroad</p>
         </div>
       </Link>
       <ul className="flex items-center justify-center gap-2">

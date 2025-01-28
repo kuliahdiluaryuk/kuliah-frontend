@@ -11,7 +11,7 @@ export const SignUpNav = () => {
           <Image className='hidden sm:block' src='/svg/logo.svg' width={44} height={44} alt='logo' />
           <div>
             <h2 className='text-lg font-semibold'>Kuliah Di Luar Yuk</h2>
-            <p className='text-xs text-muted-foreground'>Conversation AI</p>
+            <p className='text-xs text-muted-foreground'>Unlock Your Future Abroad</p>
           </div>
         </Link>
       </nav>
