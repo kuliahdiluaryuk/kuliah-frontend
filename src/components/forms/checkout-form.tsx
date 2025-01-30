@@ -47,20 +47,34 @@ export const CheckoutForm: React.FC<CheckoutFormProps> = ({ user }) => {
 
   const onCheckout = async (values: checkoutPayload) => {
     try {
+      if (!values.phone.startsWith("+62")) {
+        toast({
+          variant: "destructive",
+          title: "Invalid phone number",
+          description: "Phone number must start with +62.",
+        });
+        return; // Stop the checkout process
+      }
+
       setIsLoading(true);
       const token = getToken();
+      const payload = {
+        plan_id: planId,
+        plan_cycle: planCycle,
+        coupon_code: couponValue,
+        email: values.email,
+        name: values.name,
+        phone: values.phone,
+      };
+
       const response = await axios.post(
         `${process.env.NEXT_PUBLIC_BACKEND_API}/api/transaction`,
-        {
-          plan_id: planId,
-          plan_cycle: planCycle,
-          coupon_code: couponValue,
-        },
+        payload,
         {
           headers: {
             Authorization: `Bearer ${token}`,
           },
-        },
+        }
       );
 
       if (!response.data.data.payment_url) {
@@ -69,10 +83,10 @@ export const CheckoutForm: React.FC<CheckoutFormProps> = ({ user }) => {
         window.open(response.data.data.payment_url, "_blank");
       }
     } catch (error) {
-      console.log(error);
       toast({
         variant: "destructive",
         title: "Something went wrong.",
+        description: error instanceof Error ? error.message : "An unexpected error occurred.",
       });
     } finally {
       setIsLoading(false);
@@ -133,7 +147,9 @@ export const CheckoutForm: React.FC<CheckoutFormProps> = ({ user }) => {
                 />
               </FormControl>
               <FormMessage />
-              <p className="text-sm text-gray-500">Phone number must start with +62</p>
+              <p className="text-sm text-gray-500">
+                Phone number must start with +62
+              </p>
             </FormItem>
           )}
         />
