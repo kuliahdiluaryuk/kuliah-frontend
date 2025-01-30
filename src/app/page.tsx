@@ -5,16 +5,25 @@ import { Footer } from "@/components/layouts/footer";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import useSession from "@/hooks/use-session";
+import { getUserLogged } from "@/lib/utils";
 import { MessagesSquare } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { CiCalendar } from "react-icons/ci";
-import { RiHome6Line, RiUserVoiceLine } from "react-icons/ri";
+import { useEffect } from "react";
+import { RiHome6Line } from "react-icons/ri";
 
 
 export default function Home() {
-  const { user } = useSession();
-  
+  const { user, setUser } = useSession();
+
+  useEffect(() => {
+    const getUser = async () => {
+      const res = await getUserLogged();
+      setUser(res);
+    };
+    getUser();
+  }, []);
+
   return (
     <main className="bg-[#FAFAFA] min-h-screen flex flex-col justify-center items-center">
       <div className="flex flex-col items-center justify-center w-[95vw] sm:w-[560px] my-4 sm:my-0">
