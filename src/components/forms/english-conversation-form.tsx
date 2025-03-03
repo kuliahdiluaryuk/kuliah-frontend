@@ -29,7 +29,7 @@ import {
 } from "@/components/ui/select";
 import CircleTimer from "../circle-timer";
 import Image from "next/image";
-import { storeConversation } from "@/lib/utils";
+import { jakartaTime, storeConversation } from "@/lib/utils";
 import useMessage from "@/hooks/use-message";
 import useInstruction from "@/hooks/use-instruction";
 import Spinner from "../ui/spinner";
@@ -174,9 +174,57 @@ export function EnglishConversationForm() {
             : DEFAULT_CONVO_DURATION,
           voice: voice,
         });
+
+        const parsedMessages: ChatMessageType[] = JSON.parse(
+          conversation.messages
+        );
+        const feedbackMessage = parsedMessages[parsedMessages.length - 1];
+        const conversationMessages = parsedMessages.slice(0, -1);
+       
+
+        if (parsedMessages.length > 0) {
+          try {
+            await fetch(`${process.env.NEXT_PUBLIC_MAKE_AUTOMATION_WEBHOOK}`, {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                conversation: conversationMessages,
+                feedback: feedbackMessage.content,
+                email: user.email,
+                timestamp: jakartaTime
+              }),
+            });
+          } catch (error) {
+            console.error("Error sending feedback content:", error);
+          }
+        }
         router.push(`/english-conversation/c/${conversation.id}/result`);
       } else {
         setGlobalMessages(updatedMessages);
+        const feedbackMessage = updatedMessages[updatedMessages.length - 1];
+        const conversationMessages = updatedMessages.slice(0, -1);
+
+        if (updatedMessages.length > 0) {
+          try {
+            await fetch(`${process.env.NEXT_PUBLIC_MAKE_AUTOMATION_WEBHOOK}`, {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                conversation: conversationMessages,
+                feedback: feedbackMessage.content,
+                email: "User not logged",
+                timestamp: jakartaTime
+              }),
+            });
+          } catch (error) {
+            console.error("Error sending feedback content:", error);
+          }
+        }
+
         router.push("/english-conversation/result");
       }
     } catch (error) {
