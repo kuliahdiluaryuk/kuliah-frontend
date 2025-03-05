@@ -193,7 +193,9 @@ export function EnglishConversationForm() {
                 conversation: conversationMessages,
                 feedback: feedbackMessage.content,
                 email: user.email,
-                timestamp: jakartaTime
+                timestamp: jakartaTime,
+                level: level,
+                topic: topic
               }),
             });
           } catch (error) {
@@ -217,7 +219,9 @@ export function EnglishConversationForm() {
                 conversation: conversationMessages,
                 feedback: feedbackMessage.content,
                 email: "User not logged",
-                timestamp: jakartaTime
+                timestamp: jakartaTime,
+                level: level,
+                topic: topic
               }),
             });
           } catch (error) {
